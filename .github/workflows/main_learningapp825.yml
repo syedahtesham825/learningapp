@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest # Changed from ubuntu-latest to Windows
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -16,20 +16,20 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.x'
 
-     - name: Restore
-  run: dotnet restore ./learningapp/learningapp.csproj
+      - name: Restore
+        run: dotnet restore ./learningapp/learningapp.csproj
 
-- name: Build
-  run: dotnet build ./learningapp/learningapp.csproj --configuration Release --no-restore
+      - name: Build
+        run: dotnet build ./learningapp/learningapp.csproj --configuration Release --no-restore
 
-- name: Publish
-  run: dotnet publish ./learningapp/learningapp.csproj --configuration Release --output ./publish
+      - name: Publish
+        run: dotnet publish ./learningapp/learningapp.csproj --configuration Release --output ./publish
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: learningapp825
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          # On Windows, ensure this path matches your publish output
           package: ./publish
